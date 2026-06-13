@@ -84,6 +84,14 @@ int inserir_aluno(Aluno lista[], int cont)
         scanf("%d", &lista[cont].RA);
     }
 
+    // Verificação se o RA já foi registrado
+    for(int i = 0; i < cont; i++){
+        while(lista[i].RA == lista[cont].RA){
+            printf("Invalido. Esse RA ja foi registrado. \nDigite novamente: ");
+            scanf("%d", &lista[cont].RA);
+        }
+    }
+
     // Cadastrar notas
     for (int i = 0; i < 2; i++)
     {
@@ -95,6 +103,8 @@ int inserir_aluno(Aluno lista[], int cont)
             scanf("%f", &lista[cont].notas[i]);
         }
     }
+
+    //Cálculo de média
     for (int i = 0; i < 2; i++)
     {
         notas_media += lista[cont].notas[i];
@@ -111,7 +121,6 @@ int inserir_aluno(Aluno lista[], int cont)
         printf("Invalido. Digite novamente: ");
         scanf("%f", &faltas);
     }
-
     lista[cont].frequencia = 100 - ((faltas * 100) / frequencia);
 
     return cont + 1;
@@ -125,13 +134,13 @@ int remover_aluno(Aluno lista[], int cont)
     printf("\n--- Remover aluno ---\n");
     printf("Digite o RA do aluno que deseja excluir: ");
     scanf("%d", &RA_remocao);
-    
     while (RA_remocao < 100000 || RA_remocao > 999999)
     {
         printf("\nInvalido. O RA deve conter 6 digitos. \nDigite novamente: ");
         scanf("%d", &RA_remocao);
     }
 
+    //Verificação se o RA digitado foi registrado
     for (int i = 0; i < cont; i++)
     {
         if (lista[i].RA == RA_remocao)
@@ -205,7 +214,8 @@ void visualizar_alunos(Aluno lista[], int cont)
 // Função para buscar alunos através do RA
 void buscar_aluno(Aluno lista[], int cont)
 {
-    int RA_busca;
+    int RA_busca, enc = -1;
+
     printf("\n--- Busca de aluno ---");
     printf("\nDigite o RA do aluno: ");
     scanf("%d", &RA_busca);
@@ -214,19 +224,24 @@ void buscar_aluno(Aluno lista[], int cont)
         printf("\nInvalido. O RA deve conter 6 digitos. \nDigite novamente: ");
         scanf("%d", &RA_busca);
     }
+
     for (int i = 0; i < cont; i++)
     {
         if (lista[i].RA == RA_busca)
         {
+           enc = i;
+           break;
+        }
+    }
+
+    if (enc != -1){
             printf("\nAluno encontrado: ");
-            printf("\n...%s", lista[i].nome);
-            printf("\n%d", lista[i].RA);
-            printf("\nMedia: %.2f", lista[i].media);
-            printf("\nFrequencia: %.1f%\n", lista[i].frequencia);
-        }
-        else
-        {
-            printf("\nAluno nao encontrado.\n");
-        }
+            printf("\n...%s", lista[enc].nome);
+            printf("\n%d", lista[enc].RA);
+            printf("\nMedia: %.2f", lista[enc].media);
+            printf("\nFrequencia: %.1f%\n", lista[enc].frequencia);
+    }
+    if (enc == -1){
+        printf("\nAluno nao encontrado!");
     }
 }
