@@ -17,11 +17,14 @@ int inserir_aluno(Aluno[], int);
 int remover_aluno(Aluno[], int);
 void visualizar_alunos(Aluno[], int);
 void buscar_aluno(Aluno[], int);
+void salvar_dados(Aluno[], int);
+int carregar_dados(Aluno[]);
 
 int main()
 {
     Aluno lista_alunos[M];
-    int cont = 0, opc;
+    int cont = carregar_dados(lista_alunos); 
+    int opc;
 
     do
     {
@@ -52,6 +55,10 @@ int main()
             break;
         case 4:
             buscar_aluno(lista_alunos, cont);
+            break;
+        case 0:
+            salvar_dados(lista_alunos, cont);
+            printf("\nSaindo do sistema... Ate logo!\n");
             break;
         default:
             break;
@@ -244,4 +251,33 @@ void buscar_aluno(Aluno lista[], int cont)
     if (enc == -1){
         printf("\nAluno nao encontrado!");
     }
+}
+
+// Função para salvar os dados quando o programa for fechado
+void salvar_dados(Aluno lista[], int cont) {
+    FILE *arquivo = fopen("alunos.dat", "wb"); 
+    
+    if (arquivo == NULL) {
+        printf("\nErro: Nao foi possivel criar o arquivo de salvamento!\n");
+        return;
+    }
+
+    fwrite(lista, sizeof(Aluno), cont, arquivo);
+    
+    fclose(arquivo); 
+    printf("\nTodos os %d alunos foram salvos com sucesso!\n", cont);
+}
+
+// Função para recarregar os dados assim que o programa abrir
+int carregar_dados(Aluno lista[]) {
+    FILE *arquivo = fopen("alunos.dat", "rb"); 
+    
+    if (arquivo == NULL) {
+        return 0; 
+    }
+
+    int alunos_lidos = fread(lista, sizeof(Aluno), M, arquivo);
+    
+    fclose(arquivo);
+    return alunos_lidos;
 }
